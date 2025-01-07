@@ -1,73 +1,84 @@
-// import logo from './logo.svg';
-// import './App.css';
+// import React from "react";
+// import { Timeline } from "react-gantt-timeline";
 
-// function App() {
+// const GanttChart = () => {
+//   const data = [
+//     {
+//       id: "1",
+//       start: new Date("2025-01-10"),
+//       end: new Date("2025-01-20"),
+//       name: "Deliverable 1",
+//       owner: "Owner 1",
+//       color: "blue" // Optional: Add a color to distinguish tasks
+//     },
+//     {
+//       id: "2",
+//       start: new Date("2025-01-15"),
+//       end: new Date("2025-01-25"),
+//       name: "Deliverable 2",
+//       owner: "Owner 2",
+//       color: "green"
+//     }
+//   ];
+
+//   // Map the data to match the `react-gantt-timeline` format
+//   const tasks = data.map((task) => ({
+//     id: task.id,
+//     start: task.start,
+//     end: task.end,
+//     name: `${task.name} (Owner: ${task.owner})`,
+//     color: task.color
+//   }));
 //   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
+//     <div style={{ width: "100%", height: "500px" }}>
+//       <Timeline data={tasks} />
 //     </div>
 //   );
-// }
+// };
 
-// export default App;
+// export default GanttChart;
 
+import React from 'react';
+import { Chart } from 'react-google-charts';
 
-import React from "react";
-import { Gantt } from "wx-react-gantt";
-import { Willow } from "wx-react-gantt"; 
+const GanttChart = () => {
+  // Helper function to calculate duration in days
+  const calculateDuration = (start, end) => {
+    const timeDiff = end - start; // Get the time difference in milliseconds
+    return Math.floor(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+  };
 
+  const data = [
+    ['Task ID', 'Task Name', 'Start Date', 'End Date', 'Duration', 'Percent Complete', 'Dependencies'],
+    ['1', 'Deliverable 1', new Date(2025, 0, 10), new Date(2025, 0, 20), calculateDuration(new Date(2025, 0, 10), new Date(2025, 0, 20)), 100, null],
+    ['2', 'Deliverable 2', new Date(2025, 0, 15), new Date(2025, 0, 25), calculateDuration(new Date(2025, 0, 15), new Date(2025, 0, 25)), 80, '1'],
+  ];
 
-function App() {
-  const tasks = [
-    {
-      id: 1,
-      text: "Task 1",
-      start: new Date(2024, 0, 1),
-      end: new Date(2024, 0, 5),
-      duration: 4,
-      progress: 50,
-      type: "task",
+  const options = {
+    height: 500,
+    gantt: {
+      criticalPathEnabled: true,
+      arrowLength: 3,
+      percentEnabled: true,
+      labelStyle: {
+        fontName: 'Arial',
+        fontSize: 12,
+        color: '#000',
+      },
     },
-    {
-      id: 2,
-      text: "Task 2",
-      start: new Date(2024, 0, 6),
-      end: new Date(2024, 0, 10),
-      duration: 4,
-      progress: 30,
-      type: "task",
-    },
-  ];
+  };
 
-  const links = [
-    { id: 1, source: 1, target: 2, type: "e2e" },
-  ];
-
-  const scales = [
-    { unit: "month", step: 1, format: "MMMM yyyy" },
-    { unit: "day", step: 1, format: "d" },
-  ];
-
-  // Render the Gantt chart with a theme
   return (
-    <Willow>
-      <Gantt tasks={tasks} links={links} scales={scales} />
-    </Willow>
+    <div style={{ width: '100%', height: '500px' }}>
+      <Chart
+        chartType="Gantt"
+        data={data}
+        options={options}
+        width="100%"
+        height="500px"
+      />
+    </div>
   );
-}
+};
 
-export default App;
-
+export default GanttChart;
